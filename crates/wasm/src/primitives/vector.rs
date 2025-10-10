@@ -1,5 +1,6 @@
-use wasm_bindgen::prelude::*;
 use common_core_geometry as core;
+use wasm_bindgen::prelude::*;
+
 use crate::utils::to_js_error;
 
 #[wasm_bindgen]

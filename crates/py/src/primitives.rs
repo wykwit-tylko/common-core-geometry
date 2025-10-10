@@ -1,5 +1,5 @@
-use pyo3::prelude::*;
 use common_core_geometry::primitives as core;
+use pyo3::prelude::*;
 
 #[pyclass(name = "Point3D")]
 #[derive(Clone)]
@@ -129,7 +129,10 @@ impl PyPoint3D {
     }
 
     fn __repr__(&self) -> String {
-        format!("Point3D({}, {}, {})", self.inner.x, self.inner.y, self.inner.z)
+        format!(
+            "Point3D({}, {}, {})",
+            self.inner.x, self.inner.y, self.inner.z
+        )
     }
 
     fn __str__(&self) -> String {
@@ -144,7 +147,9 @@ impl PyPoint3D {
             -3 => Ok(self.inner.x),
             -2 => Ok(self.inner.y),
             -1 => Ok(self.inner.z),
-            _ => Err(pyo3::exceptions::PyIndexError::new_err("Index out of range")),
+            _ => Err(pyo3::exceptions::PyIndexError::new_err(
+                "Index out of range",
+            )),
         }
     }
 
@@ -401,7 +406,10 @@ impl PyVector3D {
     }
 
     fn __repr__(&self) -> String {
-        format!("Vector3D({}, {}, {})", self.inner.x, self.inner.y, self.inner.z)
+        format!(
+            "Vector3D({}, {}, {})",
+            self.inner.x, self.inner.y, self.inner.z
+        )
     }
 
     fn __str__(&self) -> String {
@@ -439,9 +447,7 @@ impl PyVector3D {
     }
 
     fn __neg__(&self) -> PyVector3D {
-        PyVector3D {
-            inner: -self.inner,
-        }
+        PyVector3D { inner: -self.inner }
     }
 
     fn __getitem__(&self, idx: isize) -> PyResult<f64> {
@@ -452,7 +458,9 @@ impl PyVector3D {
             -3 => Ok(self.inner.x),
             -2 => Ok(self.inner.y),
             -1 => Ok(self.inner.z),
-            _ => Err(pyo3::exceptions::PyIndexError::new_err("Index out of range")),
+            _ => Err(pyo3::exceptions::PyIndexError::new_err(
+                "Index out of range",
+            )),
         }
     }
 
@@ -568,8 +576,10 @@ impl PySphere {
     }
 
     fn __repr__(&self) -> String {
-        format!("Sphere(center=Point3D({}, {}, {}), radius={})", 
-                self.inner.center.x, self.inner.center.y, self.inner.center.z, self.inner.radius)
+        format!(
+            "Sphere(center=Point3D({}, {}, {}), radius={})",
+            self.inner.center.x, self.inner.center.y, self.inner.center.z, self.inner.radius
+        )
     }
 }
 
@@ -660,7 +670,7 @@ impl PyRay {
     ///     ...     t, point = result
     pub fn intersect_sphere(&self, sphere: &PySphere) -> Option<(f64, PyPoint3D)> {
         use common_core_geometry::operations::ray_sphere_intersection;
-        
+
         ray_sphere_intersection(&self.inner, &sphere.inner).map(|(t1, _t2)| {
             let point = self.inner.point_at(t1);
             (t1, PyPoint3D { inner: point })
@@ -682,10 +692,8 @@ impl PyRay {
     ///     >>> point = ray.intersect_plane(plane)
     pub fn intersect_plane(&self, plane: &PyPlane) -> Option<PyPoint3D> {
         use common_core_geometry::operations::ray_plane_intersection;
-        
-        ray_plane_intersection(&self.inner, &plane.inner).map(|point| {
-            PyPoint3D { inner: point }
-        })
+
+        ray_plane_intersection(&self.inner, &plane.inner).map(|point| PyPoint3D { inner: point })
     }
 
     #[pyo3(text_signature = "($self, triangle, /)")]
@@ -703,7 +711,7 @@ impl PyRay {
     ///     >>> result = ray.intersect_triangle(tri)
     pub fn intersect_triangle(&self, triangle: &PyTriangle) -> Option<(f64, PyPoint3D)> {
         use common_core_geometry::operations::ray_triangle_intersection;
-        
+
         ray_triangle_intersection(&self.inner, &triangle.inner).map(|t| {
             let point = self.inner.point_at(t);
             (t, PyPoint3D { inner: point })
@@ -711,9 +719,15 @@ impl PyRay {
     }
 
     fn __repr__(&self) -> String {
-        format!("Ray(origin=Point3D({}, {}, {}), direction=Vector3D({}, {}, {}))",
-                self.inner.origin.x, self.inner.origin.y, self.inner.origin.z,
-                self.inner.direction.x, self.inner.direction.y, self.inner.direction.z)
+        format!(
+            "Ray(origin=Point3D({}, {}, {}), direction=Vector3D({}, {}, {}))",
+            self.inner.origin.x,
+            self.inner.origin.y,
+            self.inner.origin.z,
+            self.inner.direction.x,
+            self.inner.direction.y,
+            self.inner.direction.z
+        )
     }
 }
 
@@ -756,19 +770,25 @@ impl PyTriangle {
     #[getter]
     /// Get the first vertex of the triangle.
     pub fn a(&self) -> PyPoint3D {
-        PyPoint3D { inner: self.inner.a }
+        PyPoint3D {
+            inner: self.inner.a,
+        }
     }
 
     #[getter]
     /// Get the second vertex of the triangle.
     pub fn b(&self) -> PyPoint3D {
-        PyPoint3D { inner: self.inner.b }
+        PyPoint3D {
+            inner: self.inner.b,
+        }
     }
 
     #[getter]
     /// Get the third vertex of the triangle.
     pub fn c(&self) -> PyPoint3D {
-        PyPoint3D { inner: self.inner.c }
+        PyPoint3D {
+            inner: self.inner.c,
+        }
     }
 
     #[pyo3(text_signature = "($self)")]
@@ -823,10 +843,18 @@ impl PyTriangle {
     }
 
     fn __repr__(&self) -> String {
-        format!("Triangle(a=Point3D({}, {}, {}), b=Point3D({}, {}, {}), c=Point3D({}, {}, {}))",
-                self.inner.a.x, self.inner.a.y, self.inner.a.z,
-                self.inner.b.x, self.inner.b.y, self.inner.b.z,
-                self.inner.c.x, self.inner.c.y, self.inner.c.z)
+        format!(
+            "Triangle(a=Point3D({}, {}, {}), b=Point3D({}, {}, {}), c=Point3D({}, {}, {}))",
+            self.inner.a.x,
+            self.inner.a.y,
+            self.inner.a.z,
+            self.inner.b.x,
+            self.inner.b.y,
+            self.inner.b.z,
+            self.inner.c.x,
+            self.inner.c.y,
+            self.inner.c.z
+        )
     }
 }
 
@@ -842,7 +870,7 @@ impl PyPlane {
     /// Cannot directly instantiate Plane. Use from_point_normal() or from_three_points().
     pub fn new() -> PyResult<Self> {
         Err(pyo3::exceptions::PyTypeError::new_err(
-            "Cannot directly instantiate Plane. Use from_point_normal() or from_three_points()"
+            "Cannot directly instantiate Plane. Use from_point_normal() or from_three_points()",
         ))
     }
 
@@ -948,8 +976,10 @@ impl PyPlane {
     }
 
     fn __repr__(&self) -> String {
-        format!("Plane(normal=Vector3D({}, {}, {}), d={})",
-                self.inner.normal.x, self.inner.normal.y, self.inner.normal.z, self.inner.d)
+        format!(
+            "Plane(normal=Vector3D({}, {}, {}), d={})",
+            self.inner.normal.x, self.inner.normal.y, self.inner.normal.z, self.inner.d
+        )
     }
 }
 
@@ -1014,13 +1044,17 @@ impl PyAABB {
     #[getter]
     /// Get the minimum corner point of the AABB.
     pub fn min(&self) -> PyPoint3D {
-        PyPoint3D { inner: self.inner.min }
+        PyPoint3D {
+            inner: self.inner.min,
+        }
     }
 
     #[getter]
     /// Get the maximum corner point of the AABB.
     pub fn max(&self) -> PyPoint3D {
-        PyPoint3D { inner: self.inner.max }
+        PyPoint3D {
+            inner: self.inner.max,
+        }
     }
 
     #[pyo3(text_signature = "($self)")]
@@ -1104,9 +1138,15 @@ impl PyAABB {
     }
 
     fn __repr__(&self) -> String {
-        format!("AABB(min=Point3D({}, {}, {}), max=Point3D({}, {}, {}))",
-                self.inner.min.x, self.inner.min.y, self.inner.min.z,
-                self.inner.max.x, self.inner.max.y, self.inner.max.z)
+        format!(
+            "AABB(min=Point3D({}, {}, {}), max=Point3D({}, {}, {}))",
+            self.inner.min.x,
+            self.inner.min.y,
+            self.inner.min.z,
+            self.inner.max.x,
+            self.inner.max.y,
+            self.inner.max.z
+        )
     }
 }
 
@@ -1212,8 +1252,14 @@ impl PyLineSegment {
     }
 
     fn __repr__(&self) -> String {
-        format!("LineSegment(start=Point3D({}, {}, {}), end=Point3D({}, {}, {}))",
-                self.inner.start.x, self.inner.start.y, self.inner.start.z,
-                self.inner.end.x, self.inner.end.y, self.inner.end.z)
+        format!(
+            "LineSegment(start=Point3D({}, {}, {}), end=Point3D({}, {}, {}))",
+            self.inner.start.x,
+            self.inner.start.y,
+            self.inner.start.z,
+            self.inner.end.x,
+            self.inner.end.y,
+            self.inner.end.z
+        )
     }
 }

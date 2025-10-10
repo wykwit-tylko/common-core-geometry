@@ -1,7 +1,7 @@
-use pyo3::prelude::*;
 use common_core_geometry as core;
+use pyo3::prelude::*;
 
-use crate::primitives::{PyPoint3D, PyVector3D, PySphere, PyTriangle, PyLineSegment, PyAABB};
+use crate::primitives::{PyAABB, PyLineSegment, PyPoint3D, PySphere, PyTriangle, PyVector3D};
 
 #[pyclass(name = "Camera")]
 #[derive(Clone)]
@@ -213,7 +213,8 @@ impl PySVGRenderer {
         fill: Option<&str>,
         width: f64,
     ) {
-        self.inner.add_triangle(&triangle.inner, stroke, fill, width);
+        self.inner
+            .add_triangle(&triangle.inner, stroke, fill, width);
     }
 
     #[pyo3(signature = (sphere, color="#000000", width=1.0))]

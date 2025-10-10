@@ -1,6 +1,7 @@
-use wasm_bindgen::prelude::*;
 use common_core_geometry::svg as core_svg;
-use crate::primitives::{Point3D, LineSegment, Triangle, Sphere, AABB};
+use wasm_bindgen::prelude::*;
+
+use crate::primitives::{LineSegment, Point3D, Sphere, Triangle, AABB};
 use crate::svg::camera::Camera;
 
 #[wasm_bindgen]
@@ -37,8 +38,15 @@ impl SVGRenderer {
     }
 
     #[wasm_bindgen(js_name = addTriangle)]
-    pub fn add_triangle(&mut self, triangle: &Triangle, stroke: &str, fill: Option<String>, width: f64) {
-        self.inner.add_triangle(&triangle.inner, stroke, fill.as_deref(), width);
+    pub fn add_triangle(
+        &mut self,
+        triangle: &Triangle,
+        stroke: &str,
+        fill: Option<String>,
+        width: f64,
+    ) {
+        self.inner
+            .add_triangle(&triangle.inner, stroke, fill.as_deref(), width);
     }
 
     #[wasm_bindgen(js_name = addSphere)]

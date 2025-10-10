@@ -1,5 +1,6 @@
-use crate::utils::approx_eq;
 use std::ops::{Add, Sub};
+
+use crate::utils::approx_eq;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Point3D {

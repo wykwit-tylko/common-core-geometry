@@ -2,18 +2,12 @@
 
 WebAssembly bindings for the Common Core Geometry library. This package provides a high-performance 3D geometry engine for use in web browsers and Node.js environments.
 
-## Installation
-
-```bash
-npm install @common-core/geometry
-```
-
 ## Quick Start
 
 ### Bundler (Webpack, Vite, Rollup)
 
 ```javascript
-import * as geometry from '@common-core/geometry';
+import * as geometry from 'geometry';
 
 const p1 = new geometry.Point3D(0, 0, 0);
 const p2 = new geometry.Point3D(3, 4, 0);
@@ -36,7 +30,7 @@ const distance = p1.distanceTo(p2); // 5.0
 ### Node.js
 
 ```javascript
-const geometry = require('@common-core/geometry');
+const geometry = require('geometry');
 
 const sphere = new geometry.Sphere(
   new geometry.Point3D(0, 0, 0),
@@ -97,36 +91,11 @@ const svg = renderer.render();
 
 ## Examples
 
-See the `examples/` directory for complete interactive HTML examples:
+See the `examples/web/` directory for complete interactive HTML examples:
 - **basic.html**: Basic geometry operations with primitives
 - **ray_casting.html**: Ray intersection demonstrations
 - **svg_rendering.html**: Interactive 3D SVG scene rendering with camera controls
 - **index.html**: Landing page with links to all examples
-
-### Running Examples
-
-To view the examples locally, serve the WASM crate directory with a static file server:
-
-```bash
-cd crates/wasm
-npx serve .
-# Open http://localhost:3000/examples/
-```
-
-## Browser Compatibility
-
-This library requires WebAssembly support and works in all modern browsers:
-- Chrome 57+
-- Firefox 52+
-- Safari 11+
-- Edge 16+
-
-## Bundle Size
-
-- **Uncompressed**: 111KB
-- **Gzipped**: 44KB
-
-All 8 primitives and operations included.
 
 ## Development
 
@@ -143,27 +112,27 @@ cargo install wasm-pack
 
 ```bash
 # Build for bundlers (webpack, vite, rollup, etc.)
-# Output: pkg/
-npm run build
+# Output: pkg-bundler/
+bun run build:bundler
 
 # Build for browser ES modules (vanilla HTML)
 # Output: pkg-web/
-npm run build:web
+bun run build:web
 
-# Build for Node.js CommonJS
+# Build for Node
 # Output: pkg-nodejs/
-npm run build:nodejs
+bun run build:nodejs
 ```
 
 **Build Artifacts:**
 
 Each build target creates a separate output directory:
-- `pkg/` - Bundler target (default)
+- `pkg-bundler/` - Bundler target
 - `pkg-web/` - Web/ES modules target
 - `pkg-nodejs/` - Node.js target
 
 These directories contain:
-- Compiled `.wasm` binary (~111KB)
+- Compiled `.wasm` binary
 - JavaScript glue code
 - TypeScript definitions (`.d.ts`)
 - `package.json` for distribution
@@ -174,19 +143,7 @@ These directories contain:
 
 Tests are written using Bun's testing framework and run against the Node.js target build.
 
-**Prerequisites:**
 ```bash
-# Install Bun (if not already installed)
-curl -fsSL https://bun.sh/install | bash
-```
-
-**Test Commands:**
-
-```bash
-# Build the Node.js target and run tests
-npm test
-
-# Or run tests directly with Bun
 bun run build:nodejs
 bun test
 ```
@@ -195,9 +152,8 @@ The test suite includes:
 - **primitives.test.js**: Tests for Point3D, Vector3D, Sphere, Ray, Triangle, Plane, AABB, LineSegment
 - **svg.test.js**: Tests for Camera and SVGRenderer functionality
 
-**Note:** Tests use the `pkg-nodejs/` build output, which is automatically generated when running `npm test`.
-
+**Note:** Tests use the `pkg-nodejs/` build output, which is automatically generated when running `bun run test`.
 
 ## License
 
-MIT OR Apache-2.0
+MIT

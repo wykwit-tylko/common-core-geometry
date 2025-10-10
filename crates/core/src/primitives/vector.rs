@@ -1,6 +1,7 @@
+use std::ops::{Add, Div, Mul, Neg, Sub};
+
 use crate::error::GeometryError;
 use crate::utils::{approx_eq, approx_zero};
-use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Vector3D {

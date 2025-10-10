@@ -1,5 +1,6 @@
-use wasm_bindgen::prelude::*;
 use common_core_geometry::primitives as core;
+use wasm_bindgen::prelude::*;
+
 use crate::primitives::{Point3D, Vector3D};
 use crate::utils::to_js_error;
 
@@ -12,28 +13,35 @@ pub struct Triangle {
 impl Triangle {
     #[wasm_bindgen(constructor)]
     pub fn new(a: &Point3D, b: &Point3D, c: &Point3D) -> Result<Triangle, JsValue> {
-        let inner = core::Triangle::new(a.inner, b.inner, c.inner)
-            .map_err(to_js_error)?;
+        let inner = core::Triangle::new(a.inner, b.inner, c.inner).map_err(to_js_error)?;
         Ok(Triangle { inner })
     }
 
     #[wasm_bindgen(getter)]
     pub fn a(&self) -> Point3D {
-        Point3D { inner: self.inner.a }
+        Point3D {
+            inner: self.inner.a,
+        }
     }
 
     #[wasm_bindgen(getter)]
     pub fn b(&self) -> Point3D {
-        Point3D { inner: self.inner.b }
+        Point3D {
+            inner: self.inner.b,
+        }
     }
 
     #[wasm_bindgen(getter)]
     pub fn c(&self) -> Point3D {
-        Point3D { inner: self.inner.c }
+        Point3D {
+            inner: self.inner.c,
+        }
     }
 
     pub fn normal(&self) -> Vector3D {
-        Vector3D { inner: self.inner.normal() }
+        Vector3D {
+            inner: self.inner.normal(),
+        }
     }
 
     pub fn area(&self) -> f64 {
@@ -41,7 +49,9 @@ impl Triangle {
     }
 
     pub fn centroid(&self) -> Point3D {
-        Point3D { inner: self.inner.centroid() }
+        Point3D {
+            inner: self.inner.centroid(),
+        }
     }
 
     #[wasm_bindgen(js_name = barycentricCoords)]

@@ -15,8 +15,8 @@ fn common_core_geometry(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyPlane>()?;
     m.add_class::<PyAABB>()?;
     m.add_class::<PyLineSegment>()?;
-    
+
     svg::register_svg_module(m)?;
-    
+
     Ok(())
 }

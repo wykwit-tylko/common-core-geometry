@@ -1,8 +1,9 @@
+use std::fmt;
+use std::io::Write;
+
 use super::camera::Camera;
 use super::projection::project_point;
 use crate::primitives::{LineSegment, Point3D, Sphere, Triangle, AABB};
-use std::fmt;
-use std::io::Write;
 
 #[derive(Debug, Clone)]
 pub enum SVGElement {

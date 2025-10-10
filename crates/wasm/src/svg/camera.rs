@@ -1,5 +1,6 @@
-use wasm_bindgen::prelude::*;
 use common_core_geometry::svg as core_svg;
+use wasm_bindgen::prelude::*;
+
 use crate::primitives::{Point3D, Vector3D};
 
 #[wasm_bindgen]

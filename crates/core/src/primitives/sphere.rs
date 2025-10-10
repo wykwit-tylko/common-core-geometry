@@ -1,7 +1,8 @@
+use std::f64::consts::PI;
+
 use crate::error::GeometryError;
 use crate::primitives::Point3D;
 use crate::utils::approx_eq;
-use std::f64::consts::PI;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Sphere {

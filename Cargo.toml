@@ -10,8 +10,8 @@ resolver = "2"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
-homepage = "https://github.com/wykwit/common-core-geometry"
-repository = "https://github.com/wykwit/common-core-geometry"
+homepage = "https://github.com/wykwit-tylko/common-core-geometry"
+repository = "https://github.com/wykwit-tylko/common-core-geometry"
 
 [workspace.dependencies]
 common-core-geometry = { path = "crates/core" }

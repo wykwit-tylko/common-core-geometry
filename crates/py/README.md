@@ -2,25 +2,6 @@
 
 Python bindings for the common-core-geometry library, providing high-performance 3D geometry primitives and operations with SVG rendering capabilities.
 
-## Installation
-
-### From Source
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/common-core-geometry
-cd common-core-geometry/crates/py
-
-# Install maturin
-pip install maturin
-
-# Build and install in development mode
-maturin develop
-
-# Or build a wheel
-maturin build --release
-```
-
 ## Features
 
 ### Core Primitives
