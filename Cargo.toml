@@ -1,12 +1,16 @@
-[package]
-name = "common-core-geometry"
+[workspace]
+members = [
+    "crates/core",
+]
+resolver = "2"
+
+[workspace.package]
 version = "0.1.0"
 edition = "2021"
-description = "A basic 3D geometry engine with fundamental geometric primitives and operations"
 license = "MIT OR Apache-2.0"
-keywords = ["geometry", "3d", "math", "graphics", "computational-geometry"]
-categories = ["mathematics", "graphics", "rendering"]
+repository = "https://github.com/yourusername/common-core-geometry"
+homepage = "https://github.com/yourusername/common-core-geometry"
 
-[dependencies]
-
-[dev-dependencies]
+[workspace.dependencies]
+common-core-geometry = { path = "crates/core" }
+approx = "0.5"

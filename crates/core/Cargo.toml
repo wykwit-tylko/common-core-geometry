@@ -1,0 +1,16 @@
+[package]
+name = "common-core-geometry"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/common-core-geometry"
+description = "A basic 3D geometry engine with fundamental primitives and operations"
+keywords = ["geometry", "3d", "graphics", "computational-geometry"]
+categories = ["mathematics", "graphics", "science"]
+
+[dependencies]
+
+[dev-dependencies]
+approx.workspace = true
