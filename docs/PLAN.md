@@ -27,24 +27,10 @@ This document outlines the step-by-step implementation plan for the Common Core 
 - 3.1 `src/operations/distance.rs`
 - 3.2 `src/operations/mod.rs`
 
-## Phase 4: Intersection Operations
+## Phase 4: Intersection Operations (DONE)
 
-**File:** `src/operations/intersection.rs`
-
-### 4.1 Ray Intersections
-- [ ] `ray_plane_intersection(ray: &Ray, plane: &Plane) -> Option<Point3D>`
-- [ ] `ray_sphere_intersection(ray: &Ray, sphere: &Sphere) -> Option<(f64, f64)>`
-  - Returns t values for entry/exit points
-- [ ] `ray_triangle_intersection(ray: &Ray, triangle: &Triangle) -> Option<f64>`
-  - Möller-Trumbore algorithm
-- [ ] `ray_aabb_intersection(ray: &Ray, aabb: &AABB) -> Option<(f64, f64)>`
-  - Slab method
-
-### 4.2 Other Intersections
-- [ ] `aabb_aabb_intersection(a: &AABB, b: &AABB) -> bool`
-- [ ] `sphere_sphere_intersection(s1: &Sphere, s2: &Sphere) -> bool`
-- [ ] `plane_plane_intersection(p1: &Plane, p2: &Plane) -> Option<Line>`
-  - Deferred if Line not in v0.1.0
+- 4.1 Ray Intersections
+- 4.2 Other Intersections
 
 ## Phase 5: Transformation Operations
 
@@ -158,14 +144,12 @@ For each primitive and operation file:
 - [ ] Add LICENSE file
 - [ ] Add examples/ directory with sample programs
 
-## Phase 10: Polish and Release
+## Phase 10: Polish
 
 - [ ] Run `cargo fmt`
 - [ ] Run `cargo clippy` and fix warnings
 - [ ] Verify all tests pass
 - [ ] Verify documentation builds correctly
-- [ ] Add CI/CD configuration (GitHub Actions)
-- [ ] Publish to crates.io
 
 ## Implementation Notes
 
