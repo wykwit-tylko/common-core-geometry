@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "crates/core",
+    "crates/py",
 ]
 resolver = "2"
 
@@ -13,4 +14,3 @@ homepage = "https://github.com/yourusername/common-core-geometry"
 
 [workspace.dependencies]
 common-core-geometry = { path = "crates/core" }
-approx = "0.5"

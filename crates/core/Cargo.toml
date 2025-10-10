@@ -13,4 +13,3 @@ categories = ["mathematics", "graphics", "science"]
 [dependencies]
 
 [dev-dependencies]
-approx.workspace = true

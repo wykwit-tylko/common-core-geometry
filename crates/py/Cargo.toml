@@ -1,0 +1,16 @@
+[package]
+name = "common-core-geometry-py"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+name = "common_core_geometry"
+crate-type = ["cdylib"]
+
+[dependencies]
+common-core-geometry.workspace = true
+pyo3 = { version = "0.26", features = ["extension-module"] }
+
+[build-dependencies]
+pyo3-build-config = "0.26"
