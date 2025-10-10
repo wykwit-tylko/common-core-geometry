@@ -2,15 +2,16 @@
 members = [
     "crates/core",
     "crates/py",
+    "crates/wasm",
 ]
 resolver = "2"
 
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/yourusername/common-core-geometry"
-homepage = "https://github.com/yourusername/common-core-geometry"
+license = "MIT"
+homepage = "https://github.com/wykwit/common-core-geometry"
+repository = "https://github.com/wykwit/common-core-geometry"
 
 [workspace.dependencies]
 common-core-geometry = { path = "crates/core" }

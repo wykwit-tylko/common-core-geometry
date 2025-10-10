@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Common Core Geometry - WASM Examples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .example-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+        .example-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        .example-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .example-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .example-features {
+            list-style: none;
+            margin-top: 15px;
+        }
+        .example-features li {
+            padding: 5px 0;
+            color: #555;
+            font-size: 0.95em;
+        }
+        .example-features li:before {
+            content: "✓ ";
+            color: #4CAF50;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .badge {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+        .info-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .info-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .info-section p, .info-section ul {
+            color: #555;
+            line-height: 1.8;
+        }
+        .info-section ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        .github-link {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .github-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .github-link a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔺 Common Core Geometry</h1>
+            <p class="subtitle">WebAssembly Bindings - Interactive Examples</p>
+        </header>
+
+        <div class="examples-grid">
+            <a href="basic.html" class="example-card">
+                <div class="example-icon">📐</div>
+                <h2 class="example-title">Basic Usage</h2>
+                <p class="example-description">
+                    Explore fundamental geometric primitives and their operations.
+                </p>
+                <ul class="example-features">
+                    <li>Point3D operations</li>
+                    <li>Vector3D calculations</li>
+                    <li>Sphere properties</li>
+                    <li>Triangle computations</li>
+                </ul>
+                <span class="badge">Beginner Friendly</span>
+            </a>
+
+            <a href="ray_casting.html" class="example-card">
+                <div class="example-icon">🎯</div>
+                <h2 class="example-title">Ray Casting</h2>
+                <p class="example-description">
+                    Demonstrate ray intersection algorithms with various geometric primitives.
+                </p>
+                <ul class="example-features">
+                    <li>Ray-Sphere intersections</li>
+                    <li>Ray-Plane intersections</li>
+                    <li>Ray-Triangle intersections</li>
+                    <li>Hit/Miss detection</li>
+                </ul>
+                <span class="badge">Intermediate</span>
+            </a>
+
+            <a href="svg_rendering.html" class="example-card">
+                <div class="example-icon">🎨</div>
+                <h2 class="example-title">SVG Rendering</h2>
+                <p class="example-description">
+                    Interactive 3D scene rendered to SVG with camera controls.
+                </p>
+                <ul class="example-features">
+                    <li>Perspective & orthographic cameras</li>
+                    <li>Real-time scene updates</li>
+                    <li>Customizable objects</li>
+                    <li>SVG export</li>
+                </ul>
+                <span class="badge">Advanced</span>
+            </a>
+        </div>
+
+        <div class="info-section">
+            <h2>📚 About This Library</h2>
+            <p>
+                Common Core Geometry is a high-performance 3D geometry engine written in Rust and 
+                compiled to WebAssembly. It provides a comprehensive set of primitives and operations 
+                for computational geometry tasks.
+            </p>
+            <h3 style="margin-top: 20px; color: #667eea;">Features:</h3>
+            <ul>
+                <li><strong>8 Core Primitives:</strong> Point3D, Vector3D, Sphere, Ray, Triangle, Plane, AABB, LineSegment</li>
+                <li><strong>Fast Performance:</strong> Native Rust speed in your browser</li>
+                <li><strong>SVG Rendering:</strong> Project 3D geometry to 2D with camera support</li>
+                <li><strong>TypeScript Ready:</strong> Auto-generated type definitions</li>
+                <li><strong>Small Bundle:</strong> Optimized WASM binary (~111KB uncompressed)</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h2>🚀 Quick Start</h2>
+            <p>Install the package from NPM:</p>
+            <pre style="background: #f4f4f4; padding: 15px; border-radius: 6px; margin: 10px 0; overflow-x: auto;"><code>npm install @common-core/geometry</code></pre>
+            
+            <p style="margin-top: 15px;">Use it in your project:</p>
+            <pre style="background: #f4f4f4; padding: 15px; border-radius: 6px; margin: 10px 0; overflow-x: auto;"><code>import init, { Point3D, Vector3D } from '@common-core/geometry';
+
+await init();
+
+const p1 = new Point3D(0, 0, 0);
+const p2 = new Point3D(3, 4, 0);
+const distance = p1.distanceTo(p2); // 5.0</code></pre>
+        </div>
+
+        <div class="info-section">
+            <h2>🛠️ Build Targets</h2>
+            <p>This library supports multiple build targets:</p>
+            <ul>
+                <li><strong>Bundler:</strong> For webpack, vite, rollup, etc.</li>
+                <li><strong>Web:</strong> For vanilla HTML with ES modules</li>
+                <li><strong>Node.js:</strong> For server-side JavaScript</li>
+            </ul>
+        </div>
+
+        <div class="github-link">
+            <p>
+                <a href="https://github.com/yourusername/common-core-geometry">
+                    ⭐ View on GitHub
+                </a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Usage - Common Core Geometry WASM</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        .example {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .code {
+            background: #f4f4f4;
+            padding: 10px;
+            border-left: 4px solid #4CAF50;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .result {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .result-label {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔺 Common Core Geometry - Basic Usage</h1>
+    <p><a href="index.html">← Back to Examples</a></p>
+
+    <div id="loading" class="loading">Loading WebAssembly module...</div>
+    <div id="content" style="display: none;">
+        <div class="example">
+            <h2>Point3D Operations</h2>
+            <div class="code">
+                const p1 = new Point3D(1.0, 2.0, 3.0);<br>
+                const p2 = new Point3D(4.0, 6.0, 8.0);
+            </div>
+            <div class="result">
+                <div class="result-label">Point 1:</div>
+                <div id="point1"></div>
+                <div class="result-label">Point 2:</div>
+                <div id="point2"></div>
+                <div class="result-label">Distance:</div>
+                <div id="distance"></div>
+                <div class="result-label">Midpoint:</div>
+                <div id="midpoint"></div>
+            </div>
+        </div>
+
+        <div class="example">
+            <h2>Vector3D Operations</h2>
+            <div class="code">
+                const v1 = new Vector3D(3.0, 4.0, 0.0);<br>
+                const v2 = new Vector3D(1.0, 0.0, 0.0);
+            </div>
+            <div class="result">
+                <div class="result-label">Vector 1:</div>
+                <div id="vector1"></div>
+                <div class="result-label">Magnitude:</div>
+                <div id="magnitude"></div>
+                <div class="result-label">Normalized:</div>
+                <div id="normalized"></div>
+                <div class="result-label">Dot Product:</div>
+                <div id="dot"></div>
+                <div class="result-label">Cross Product:</div>
+                <div id="cross"></div>
+            </div>
+        </div>
+
+        <div class="example">
+            <h2>Sphere Operations</h2>
+            <div class="code">
+                const center = new Point3D(0.0, 0.0, 0.0);<br>
+                const sphere = new Sphere(center, 5.0);
+            </div>
+            <div class="result">
+                <div class="result-label">Center:</div>
+                <div id="sphere-center"></div>
+                <div class="result-label">Radius:</div>
+                <div id="sphere-radius"></div>
+                <div class="result-label">Volume:</div>
+                <div id="sphere-volume"></div>
+                <div class="result-label">Surface Area:</div>
+                <div id="sphere-area"></div>
+            </div>
+        </div>
+
+        <div class="example">
+            <h2>Triangle Operations</h2>
+            <div class="code">
+                const a = new Point3D(0.0, 0.0, 0.0);<br>
+                const b = new Point3D(4.0, 0.0, 0.0);<br>
+                const c = new Point3D(0.0, 3.0, 0.0);<br>
+                const triangle = new Triangle(a, b, c);
+            </div>
+            <div class="result">
+                <div class="result-label">Area:</div>
+                <div id="triangle-area"></div>
+                <div class="result-label">Centroid:</div>
+                <div id="triangle-centroid"></div>
+                <div class="result-label">Normal:</div>
+                <div id="triangle-normal"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import init, { Point3D, Vector3D, Sphere, Triangle } from '../../pkg-web/common_core_geometry_wasm.js';
+
+        async function run() {
+            await init();
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+
+            const p1 = new Point3D(1.0, 2.0, 3.0);
+            const p2 = new Point3D(4.0, 6.0, 8.0);
+
+            document.getElementById('point1').textContent = `(${p1.x}, ${p1.y}, ${p1.z})`;
+            document.getElementById('point2').textContent = `(${p2.x}, ${p2.y}, ${p2.z})`;
+            document.getElementById('distance').textContent = p1.distanceTo(p2).toFixed(4);
+            
+            const mid = p1.midpoint(p2);
+            document.getElementById('midpoint').textContent = `(${mid.x}, ${mid.y}, ${mid.z})`;
+
+            const v1 = new Vector3D(3.0, 4.0, 0.0);
+            const v2 = new Vector3D(1.0, 0.0, 0.0);
+
+            document.getElementById('vector1').textContent = `(${v1.x}, ${v1.y}, ${v1.z})`;
+            document.getElementById('magnitude').textContent = v1.magnitude().toFixed(4);
+            
+            const norm = v1.normalize();
+            document.getElementById('normalized').textContent = `(${norm.x.toFixed(4)}, ${norm.y.toFixed(4)}, ${norm.z.toFixed(4)})`;
+            document.getElementById('dot').textContent = v1.dot(v2).toFixed(4);
+            
+            const crossProd = v1.cross(v2);
+            document.getElementById('cross').textContent = `(${crossProd.x}, ${crossProd.y}, ${crossProd.z})`;
+
+            const center = new Point3D(0.0, 0.0, 0.0);
+            const sphere = new Sphere(center, 5.0);
+
+            document.getElementById('sphere-center').textContent = `(${sphere.center.x}, ${sphere.center.y}, ${sphere.center.z})`;
+            document.getElementById('sphere-radius').textContent = sphere.radius.toFixed(2);
+            document.getElementById('sphere-volume').textContent = sphere.volume().toFixed(4);
+            document.getElementById('sphere-area').textContent = sphere.surfaceArea().toFixed(4);
+
+            const a = new Point3D(0.0, 0.0, 0.0);
+            const b = new Point3D(4.0, 0.0, 0.0);
+            const c = new Point3D(0.0, 3.0, 0.0);
+            const triangle = new Triangle(a, b, c);
+
+            document.getElementById('triangle-area').textContent = triangle.area().toFixed(4);
+            
+            const centroid = triangle.centroid();
+            document.getElementById('triangle-centroid').textContent = `(${centroid.x.toFixed(4)}, ${centroid.y.toFixed(4)}, ${centroid.z.toFixed(4)})`;
+            
+            const normal = triangle.normal();
+            document.getElementById('triangle-normal').textContent = `(${normal.x.toFixed(4)}, ${normal.y.toFixed(4)}, ${normal.z.toFixed(4)})`;
+        }
+
+        run().catch(console.error);
+    </script>
+</body>
+</html>

@@ -4,12 +4,6 @@ Python bindings for the common-core-geometry library, providing high-performance
 
 ## Installation
 
-### From PyPI (when published)
-
-```bash
-pip install common-core-geometry
-```
-
 ### From Source
 
 ```bash

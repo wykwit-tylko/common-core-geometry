@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Rendering - Common Core Geometry WASM</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #9C27B0;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .viewport {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .code {
+            background: #f4f4f4;
+            padding: 10px;
+            border-left: 4px solid #9C27B0;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+        button {
+            background: #9C27B0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #7B1FA2;
+        }
+        .svg-container {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            background: #fafafa;
+            overflow: auto;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        a {
+            color: #9C27B0;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="number"], input[type="color"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .info {
+            background: #e1bee7;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 SVG Rendering Demonstration</h1>
+    <p><a href="index.html">← Back to Examples</a></p>
+
+    <div id="loading" class="loading">Loading WebAssembly module...</div>
+    <div id="content" style="display: none;">
+        <div class="container">
+            <div class="controls">
+                <h2>Camera Settings</h2>
+                <label>Camera Type:</label>
+                <select id="camera-type">
+                    <option value="perspective">Perspective</option>
+                    <option value="orthographic">Orthographic</option>
+                </select>
+                
+                <label>Position X:</label>
+                <input type="number" id="cam-x" value="10" step="1">
+                
+                <label>Position Y:</label>
+                <input type="number" id="cam-y" value="10" step="1">
+                
+                <label>Position Z:</label>
+                <input type="number" id="cam-z" value="10" step="1">
+
+                <label>FOV (Perspective):</label>
+                <input type="number" id="fov" value="45" step="5" min="10" max="120">
+
+                <h2>Scene Objects</h2>
+                <div class="info">
+                    Scene includes:<br>
+                    • Coordinate axes (X=red, Y=green, Z=blue)<br>
+                    • Triangle in XY plane<br>
+                    • Sphere at origin<br>
+                    • Bounding box
+                </div>
+
+                <label>Sphere Color:</label>
+                <input type="color" id="sphere-color" value="#ff4444">
+
+                <label>Triangle Fill:</label>
+                <input type="color" id="triangle-fill" value="#ffeb3b">
+
+                <button onclick="render()">🔄 Render Scene</button>
+                <button onclick="downloadSVG()">💾 Download SVG</button>
+            </div>
+
+            <div class="viewport">
+                <h2>Rendered Output</h2>
+                <div id="svg-output" class="svg-container"></div>
+            </div>
+
+            <div class="full-width controls">
+                <h2>Code Example</h2>
+                <div class="code" id="code-example"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import init, { 
+            Point3D, 
+            Vector3D, 
+            Sphere, 
+            Triangle, 
+            LineSegment, 
+            AABB,
+            Camera,
+            SVGRenderer 
+        } from '../../pkg-web/common_core_geometry_wasm.js';
+
+        let wasmReady = false;
+        let currentSvg = '';
+
+        async function initialize() {
+            await init();
+            wasmReady = true;
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+
+            render();
+        }
+
+        window.render = function() {
+            if (!wasmReady) return;
+
+            const camX = parseFloat(document.getElementById('cam-x').value);
+            const camY = parseFloat(document.getElementById('cam-y').value);
+            const camZ = parseFloat(document.getElementById('cam-z').value);
+            const fov = parseFloat(document.getElementById('fov').value);
+            const cameraType = document.getElementById('camera-type').value;
+
+            const sphereColor = document.getElementById('sphere-color').value;
+            const triangleFill = document.getElementById('triangle-fill').value;
+
+            const position = new Point3D(camX, camY, camZ);
+            const target = new Point3D(0, 0, 0);
+            const up = new Vector3D(0, 0, 1);
+
+            let camera;
+            if (cameraType === 'perspective') {
+                camera = Camera.perspective(position, target, up, fov, 1.0);
+            } else {
+                camera = Camera.orthographic(position, target, up, 20, 20);
+            }
+
+            const renderer = new SVGRenderer(800, 800, camera);
+            renderer.setBackground("#ffffff");
+
+            const axisLength = 5.0;
+            const xAxis = new LineSegment(
+                new Point3D(0, 0, 0),
+                new Point3D(axisLength, 0, 0)
+            );
+            renderer.addLineSegment(xAxis, "#ff0000", 2.0);
+
+            const yAxis = new LineSegment(
+                new Point3D(0, 0, 0),
+                new Point3D(0, axisLength, 0)
+            );
+            renderer.addLineSegment(yAxis, "#00ff00", 2.0);
+
+            const zAxis = new LineSegment(
+                new Point3D(0, 0, 0),
+                new Point3D(0, 0, axisLength)
+            );
+            renderer.addLineSegment(zAxis, "#0000ff", 2.0);
+
+            const triangle = new Triangle(
+                new Point3D(-2, -2, 0),
+                new Point3D(2, -2, 0),
+                new Point3D(0, 2, 0)
+            );
+            renderer.addTriangle(triangle, "#000000", triangleFill, 1.5);
+
+            const sphere = new Sphere(new Point3D(0, 0, 0), 1.5);
+            renderer.addSphere(sphere, sphereColor, 2.0);
+
+            const aabb = new AABB(
+                new Point3D(-3, -3, -1),
+                new Point3D(3, 3, 2)
+            );
+            renderer.addAabb(aabb, "#888888", 1.0);
+
+            currentSvg = renderer.toSvgString();
+            document.getElementById('svg-output').innerHTML = currentSvg;
+
+            updateCodeExample(cameraType, camX, camY, camZ, fov, sphereColor, triangleFill);
+        };
+
+        window.downloadSVG = function() {
+            if (!currentSvg) return;
+
+            const blob = new Blob([currentSvg], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'geometry-scene.svg';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        function updateCodeExample(type, x, y, z, fov, sColor, tFill) {
+            const code = `// Create camera
+const position = new Point3D(${x}, ${y}, ${z});
+const target = new Point3D(0, 0, 0);
+const up = new Vector3D(0, 0, 1);
+const camera = Camera.${type}(position, target, up, ${fov}, 1.0);
+
+// Create renderer
+const renderer = new SVGRenderer(800, 800, camera);
+renderer.setBackground("#ffffff");
+
+// Add coordinate axes
+const xAxis = new LineSegment(
+    new Point3D(0, 0, 0), 
+    new Point3D(5, 0, 0)
+);
+renderer.addLineSegment(xAxis, "#ff0000", 2.0);
+
+// Add triangle with fill
+const triangle = new Triangle(
+    new Point3D(-2, -2, 0),
+    new Point3D(2, -2, 0),
+    new Point3D(0, 2, 0)
+);
+renderer.addTriangle(triangle, "#000000", "${tFill}", 1.5);
+
+// Add sphere
+const sphere = new Sphere(new Point3D(0, 0, 0), 1.5);
+renderer.addSphere(sphere, "${sColor}", 2.0);
+
+// Add bounding box
+const aabb = new AABB(
+    new Point3D(-3, -3, -1),
+    new Point3D(3, 3, 2)
+);
+renderer.addAabb(aabb, "#888888", 1.0);
+
+// Render to SVG
+const svg = renderer.toSvgString();`;
+
+            document.getElementById('code-example').textContent = code;
+        }
+
+        initialize().catch(console.error);
+    </script>
+</body>
+</html>

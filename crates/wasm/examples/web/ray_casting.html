@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ray Casting - Common Core Geometry WASM</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #2196F3;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .example {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .code {
+            background: #f4f4f4;
+            padding: 10px;
+            border-left: 4px solid #2196F3;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        .result {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .hit {
+            background: #c8e6c9;
+        }
+        .miss {
+            background: #ffccbc;
+        }
+        .result-label {
+            font-weight: bold;
+            color: #1565c0;
+            margin-bottom: 5px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+        }
+        .visualization {
+            grid-column: 1 / -1;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 Ray Casting Demonstrations</h1>
+    <p><a href="index.html">← Back to Examples</a></p>
+
+    <div id="loading" class="loading">Loading WebAssembly module...</div>
+    <div id="content" style="display: none;">
+        <div class="container">
+            <div class="example">
+                <h2>Ray-Sphere Intersection (Hit)</h2>
+                <div class="code">
+                    const ray = new Ray(<br>
+                    &nbsp;&nbsp;new Point3D(0, 0, 5),<br>
+                    &nbsp;&nbsp;new Vector3D(0, 0, -1)<br>
+                    );<br>
+                    const sphere = new Sphere(<br>
+                    &nbsp;&nbsp;new Point3D(0, 0, 0),<br>
+                    &nbsp;&nbsp;1.0<br>
+                    );
+                </div>
+                <div class="result hit" id="ray-sphere-hit"></div>
+            </div>
+
+            <div class="example">
+                <h2>Ray-Sphere Intersection (Miss)</h2>
+                <div class="code">
+                    const ray = new Ray(<br>
+                    &nbsp;&nbsp;new Point3D(0, 5, 5),<br>
+                    &nbsp;&nbsp;new Vector3D(0, 0, -1)<br>
+                    );<br>
+                    const sphere = new Sphere(<br>
+                    &nbsp;&nbsp;new Point3D(0, 0, 0),<br>
+                    &nbsp;&nbsp;1.0<br>
+                    );
+                </div>
+                <div class="result miss" id="ray-sphere-miss"></div>
+            </div>
+
+            <div class="example">
+                <h2>Ray-Plane Intersection (Hit)</h2>
+                <div class="code">
+                    const ray = new Ray(<br>
+                    &nbsp;&nbsp;new Point3D(0, 5, 0),<br>
+                    &nbsp;&nbsp;new Vector3D(0, -1, 0)<br>
+                    );<br>
+                    const plane = Plane.fromPointNormal(<br>
+                    &nbsp;&nbsp;new Point3D(0, 0, 0),<br>
+                    &nbsp;&nbsp;new Vector3D(0, 1, 0)<br>
+                    );
+                </div>
+                <div class="result hit" id="ray-plane-hit"></div>
+            </div>
+
+            <div class="example">
+                <h2>Ray-Plane Intersection (Miss)</h2>
+                <div class="code">
+                    const ray = new Ray(<br>
+                    &nbsp;&nbsp;new Point3D(0, 0, 0),<br>
+                    &nbsp;&nbsp;new Vector3D(1, 0, 0)<br>
+                    );<br>
+                    const plane = Plane.fromPointNormal(<br>
+                    &nbsp;&nbsp;new Point3D(0, 0, 0),<br>
+                    &nbsp;&nbsp;new Vector3D(0, 1, 0)<br>
+                    );
+                </div>
+                <div class="result miss" id="ray-plane-miss"></div>
+            </div>
+
+            <div class="example">
+                <h2>Ray-Triangle Intersection (Hit)</h2>
+                <div class="code">
+                    const ray = new Ray(<br>
+                    &nbsp;&nbsp;new Point3D(1, 1, 5),<br>
+                    &nbsp;&nbsp;new Vector3D(0, 0, -1)<br>
+                    );<br>
+                    const triangle = new Triangle(<br>
+                    &nbsp;&nbsp;new Point3D(0, 0, 0),<br>
+                    &nbsp;&nbsp;new Point3D(3, 0, 0),<br>
+                    &nbsp;&nbsp;new Point3D(0, 3, 0)<br>
+                    );
+                </div>
+                <div class="result hit" id="ray-triangle-hit"></div>
+            </div>
+
+            <div class="example">
+                <h2>Ray-Triangle Intersection (Miss)</h2>
+                <div class="code">
+                    const ray = new Ray(<br>
+                    &nbsp;&nbsp;new Point3D(5, 5, 5),<br>
+                    &nbsp;&nbsp;new Vector3D(0, 0, -1)<br>
+                    );<br>
+                    const triangle = new Triangle(<br>
+                    &nbsp;&nbsp;new Point3D(0, 0, 0),<br>
+                    &nbsp;&nbsp;new Point3D(3, 0, 0),<br>
+                    &nbsp;&nbsp;new Point3D(0, 3, 0)<br>
+                    );
+                </div>
+                <div class="result miss" id="ray-triangle-miss"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import init, { Point3D, Vector3D, Sphere, Ray, Plane, Triangle } from '../../pkg-web/common_core_geometry_wasm.js';
+
+        function formatPoint(p) {
+            return `(${p.x.toFixed(4)}, ${p.y.toFixed(4)}, ${p.z.toFixed(4)})`;
+        }
+
+        async function run() {
+            await init();
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+
+            const raySphereHit = new Ray(
+                new Point3D(0, 0, 5),
+                new Vector3D(0, 0, -1)
+            );
+            const sphereHit = new Sphere(new Point3D(0, 0, 0), 1.0);
+            const hitResult = raySphereHit.intersectSphere(sphereHit);
+            
+            if (hitResult) {
+                const t = Math.min(hitResult.t1, hitResult.t2);
+                const point = raySphereHit.pointAt(t);
+                document.getElementById('ray-sphere-hit').innerHTML = `
+                    <div class="result-label">✓ HIT</div>
+                    <div>Distance (t1): ${hitResult.t1.toFixed(4)}, t2: ${hitResult.t2.toFixed(4)}</div>
+                    <div>Intersection Point: ${formatPoint(point)}</div>
+                `;
+            }
+
+            const raySphereMiss = new Ray(
+                new Point3D(0, 5, 5),
+                new Vector3D(0, 0, -1)
+            );
+            const sphereMiss = new Sphere(new Point3D(0, 0, 0), 1.0);
+            const missResult = raySphereMiss.intersectSphere(sphereMiss);
+            
+            document.getElementById('ray-sphere-miss').innerHTML = `
+                <div class="result-label">✗ MISS</div>
+                <div>No intersection detected</div>
+            `;
+
+            const rayPlaneHit = new Ray(
+                new Point3D(0, 5, 0),
+                new Vector3D(0, -1, 0)
+            );
+            const planeHit = Plane.fromPointNormal(
+                new Point3D(0, 0, 0),
+                new Vector3D(0, 1, 0)
+            );
+            const planeHitResult = rayPlaneHit.intersectPlane(planeHit);
+            
+            if (planeHitResult) {
+                document.getElementById('ray-plane-hit').innerHTML = `
+                    <div class="result-label">✓ HIT</div>
+                    <div>Intersection Point: ${formatPoint(planeHitResult)}</div>
+                `;
+            }
+
+            const rayPlaneMiss = new Ray(
+                new Point3D(0, 0, 0),
+                new Vector3D(1, 0, 0)
+            );
+            const planeMiss = Plane.fromPointNormal(
+                new Point3D(0, 0, 0),
+                new Vector3D(0, 1, 0)
+            );
+            const planeMissResult = rayPlaneMiss.intersectPlane(planeMiss);
+            
+            document.getElementById('ray-plane-miss').innerHTML = `
+                <div class="result-label">✗ MISS</div>
+                <div>Ray is parallel to plane</div>
+            `;
+
+            const rayTriangleHit = new Ray(
+                new Point3D(1, 1, 5),
+                new Vector3D(0, 0, -1)
+            );
+            const triangleHit = new Triangle(
+                new Point3D(0, 0, 0),
+                new Point3D(3, 0, 0),
+                new Point3D(0, 3, 0)
+            );
+            const triangleHitResult = rayTriangleHit.intersectTriangle(triangleHit);
+            
+            if (triangleHitResult) {
+                document.getElementById('ray-triangle-hit').innerHTML = `
+                    <div class="result-label">✓ HIT</div>
+                    <div>Distance (t): ${triangleHitResult.t.toFixed(4)}</div>
+                    <div>Intersection Point: ${formatPoint(triangleHitResult.point)}</div>
+                `;
+            }
+
+            const rayTriangleMiss = new Ray(
+                new Point3D(5, 5, 5),
+                new Vector3D(0, 0, -1)
+            );
+            const triangleMiss = new Triangle(
+                new Point3D(0, 0, 0),
+                new Point3D(3, 0, 0),
+                new Point3D(0, 3, 0)
+            );
+            const triangleMissResult = rayTriangleMiss.intersectTriangle(triangleMiss);
+            
+            document.getElementById('ray-triangle-miss').innerHTML = `
+                <div class="result-label">✗ MISS</div>
+                <div>Ray does not intersect triangle</div>
+            `;
+        }
+
+        run().catch(console.error);
+    </script>
+</body>
+</html>

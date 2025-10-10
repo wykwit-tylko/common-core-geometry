@@ -1,0 +1,39 @@
+{
+  "name": "@common-core/geometry",
+  "version": "0.1.0",
+  "description": "A 3D geometry engine with primitives and operations - WebAssembly bindings",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "index_bg.wasm",
+    "index_bg.wasm.d.ts",
+    "README.md"
+  ],
+  "scripts": {
+    "build:bundler": "wasm-pack build --target bundler -d pkg-bundler",
+    "build:nodejs": "wasm-pack build --target nodejs -d pkg-nodejs",
+    "build:web": "wasm-pack build --target web -d pkg-web",
+    "clean": "cargo clean && rm -rf pkg pkg-bundler pkg-web pkg-nodejs",
+    "test": "bun run build:nodejs && bun test",
+  },
+  "keywords": [
+    "geometry",
+    "3d",
+    "graphics",
+    "computational-geometry",
+    "wasm",
+    "webassembly",
+    "ray-tracing",
+    "svg"
+  ],
+  "author": "wykwit",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wykwit/common-core-geometry"
+  },
+  "homepage": "https://github.com/wykwit/common-core-geometry#readme"
+}

@@ -1,0 +1,10 @@
+src/
+tests/
+examples/
+target/
+Cargo.toml
+Cargo.lock
+pkg-web/
+pkg-nodejs/
+*.wasm.d.ts
+.gitignore
