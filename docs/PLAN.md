@@ -32,24 +32,10 @@ This document outlines the step-by-step implementation plan for the Common Core 
 - 4.1 Ray Intersections
 - 4.2 Other Intersections
 
-## Phase 5: Transformation Operations
+## Phase 5: Transformation Operations (DONE)
 
-**File:** `src/operations/transform.rs`
-
-### 5.1 Basic Transformations
-- [ ] Translation (already in primitives via Vector3D addition)
-- [ ] Implement `Transformable` trait:
-  - `translate(&self, v: &Vector3D) -> Self`
-  - `scale(&self, center: &Point3D, factor: f64) -> Self`
-
-### 5.2 Implement Transformable for primitives
-- [ ] Point3D
-- [ ] LineSegment
-- [ ] Sphere
-- [ ] AABB
-- [ ] Triangle
-
-Note: Rotation deferred to later versions (requires quaternions/matrices)
+- 5.1 Basic Transformations: translate, scale
+- 5.2 Implement Transformable for primitives
 
 ## Phase 6: SVG Rendering Module
 
