@@ -1,0 +1,14 @@
+[package]
+name = "common-core-geometry"
+version = "0.1.0"
+edition = "2021"
+authors = ["Common Core Contributors"]
+description = "A basic 3D geometry engine with fundamental geometric primitives and operations"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/common-core/geometry"
+keywords = ["geometry", "3d", "math", "graphics", "computational-geometry"]
+categories = ["mathematics", "graphics", "rendering"]
+
+[dependencies]
+
+[dev-dependencies]
