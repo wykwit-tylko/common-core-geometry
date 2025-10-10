@@ -1,5 +1,5 @@
 use crate::error::GeometryError;
-use crate::primitives::{AABB, Point3D, Plane, Vector3D};
+use crate::primitives::{Plane, Point3D, Vector3D, AABB};
 use crate::utils::approx_zero;
 
 #[derive(Debug, Clone, Copy)]
@@ -14,13 +14,13 @@ impl Triangle {
         let v1 = Vector3D::from_points(&a, &b);
         let v2 = Vector3D::from_points(&a, &c);
         let cross = v1.cross(&v2);
-        
+
         if approx_zero(cross.magnitude_squared()) {
             return Err(GeometryError::DegenerateCase(
                 "Triangle vertices are collinear".to_string(),
             ));
         }
-        
+
         Ok(Self { a, b, c })
     }
 
@@ -84,7 +84,7 @@ impl Triangle {
         let d21 = v2.dot(&v1);
 
         let denom = d00 * d11 - d01 * d01;
-        
+
         if approx_zero(denom) {
             return (1.0, 0.0, 0.0);
         }

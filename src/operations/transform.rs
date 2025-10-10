@@ -1,4 +1,4 @@
-use crate::primitives::{AABB, LineSegment, Point3D, Sphere, Triangle, Vector3D};
+use crate::primitives::{LineSegment, Point3D, Sphere, Triangle, Vector3D, AABB};
 
 pub trait Transformable {
     fn translate(&self, v: &Vector3D) -> Self;
@@ -63,19 +63,19 @@ impl Transformable for AABB {
     fn scale(&self, center: &Point3D, factor: f64) -> Self {
         let scaled_min = self.min.scale(center, factor);
         let scaled_max = self.max.scale(center, factor);
-        
+
         let actual_min = Point3D::new(
             scaled_min.x.min(scaled_max.x),
             scaled_min.y.min(scaled_max.y),
             scaled_min.z.min(scaled_max.z),
         );
-        
+
         let actual_max = Point3D::new(
             scaled_min.x.max(scaled_max.x),
             scaled_min.y.max(scaled_max.y),
             scaled_min.z.max(scaled_max.z),
         );
-        
+
         AABB::new(actual_min, actual_max).expect("Scaling preserves AABB validity")
     }
 }
@@ -112,7 +112,7 @@ mod tests {
         let p = Point3D::new(1.0, 2.0, 3.0);
         let v = Vector3D::new(1.0, 1.0, 1.0);
         let result = p.translate(&v);
-        
+
         assert!(approx_eq(result.x, 2.0));
         assert!(approx_eq(result.y, 3.0));
         assert!(approx_eq(result.z, 4.0));
@@ -123,7 +123,7 @@ mod tests {
         let p = Point3D::new(2.0, 4.0, 6.0);
         let center = Point3D::origin();
         let result = p.scale(&center, 2.0);
-        
+
         assert!(approx_eq(result.x, 4.0));
         assert!(approx_eq(result.y, 8.0));
         assert!(approx_eq(result.z, 12.0));
@@ -134,7 +134,7 @@ mod tests {
         let p = Point3D::new(3.0, 3.0, 3.0);
         let center = Point3D::new(1.0, 1.0, 1.0);
         let result = p.scale(&center, 2.0);
-        
+
         assert!(approx_eq(result.x, 5.0));
         assert!(approx_eq(result.y, 5.0));
         assert!(approx_eq(result.z, 5.0));
@@ -145,17 +145,18 @@ mod tests {
         let seg = LineSegment::new(Point3D::origin(), Point3D::new(1.0, 0.0, 0.0)).unwrap();
         let v = Vector3D::new(1.0, 2.0, 3.0);
         let result = seg.translate(&v);
-        
+
         assert_eq!(result.start, Point3D::new(1.0, 2.0, 3.0));
         assert_eq!(result.end, Point3D::new(2.0, 2.0, 3.0));
     }
 
     #[test]
     fn test_line_segment_scale() {
-        let seg = LineSegment::new(Point3D::new(1.0, 0.0, 0.0), Point3D::new(2.0, 0.0, 0.0)).unwrap();
+        let seg =
+            LineSegment::new(Point3D::new(1.0, 0.0, 0.0), Point3D::new(2.0, 0.0, 0.0)).unwrap();
         let center = Point3D::origin();
         let result = seg.scale(&center, 2.0);
-        
+
         assert_eq!(result.start, Point3D::new(2.0, 0.0, 0.0));
         assert_eq!(result.end, Point3D::new(4.0, 0.0, 0.0));
     }
@@ -165,7 +166,7 @@ mod tests {
         let sphere = Sphere::new(Point3D::origin(), 1.0).unwrap();
         let v = Vector3D::new(5.0, 5.0, 5.0);
         let result = sphere.translate(&v);
-        
+
         assert_eq!(result.center, Point3D::new(5.0, 5.0, 5.0));
         assert!(approx_eq(result.radius, 1.0));
     }
@@ -175,7 +176,7 @@ mod tests {
         let sphere = Sphere::new(Point3D::new(1.0, 0.0, 0.0), 2.0).unwrap();
         let center = Point3D::origin();
         let result = sphere.scale(&center, 3.0);
-        
+
         assert_eq!(result.center, Point3D::new(3.0, 0.0, 0.0));
         assert!(approx_eq(result.radius, 6.0));
     }
@@ -185,7 +186,7 @@ mod tests {
         let aabb = AABB::new(Point3D::origin(), Point3D::new(1.0, 1.0, 1.0)).unwrap();
         let v = Vector3D::new(2.0, 2.0, 2.0);
         let result = aabb.translate(&v);
-        
+
         assert_eq!(result.min, Point3D::new(2.0, 2.0, 2.0));
         assert_eq!(result.max, Point3D::new(3.0, 3.0, 3.0));
     }
@@ -195,7 +196,7 @@ mod tests {
         let aabb = AABB::new(Point3D::new(1.0, 1.0, 1.0), Point3D::new(2.0, 2.0, 2.0)).unwrap();
         let center = Point3D::origin();
         let result = aabb.scale(&center, 2.0);
-        
+
         assert_eq!(result.min, Point3D::new(2.0, 2.0, 2.0));
         assert_eq!(result.max, Point3D::new(4.0, 4.0, 4.0));
     }
@@ -205,7 +206,7 @@ mod tests {
         let aabb = AABB::new(Point3D::new(1.0, 1.0, 1.0), Point3D::new(2.0, 2.0, 2.0)).unwrap();
         let center = Point3D::origin();
         let result = aabb.scale(&center, -1.0);
-        
+
         assert_eq!(result.min, Point3D::new(-2.0, -2.0, -2.0));
         assert_eq!(result.max, Point3D::new(-1.0, -1.0, -1.0));
     }
@@ -216,10 +217,11 @@ mod tests {
             Point3D::origin(),
             Point3D::new(1.0, 0.0, 0.0),
             Point3D::new(0.0, 1.0, 0.0),
-        ).unwrap();
+        )
+        .unwrap();
         let v = Vector3D::new(1.0, 1.0, 1.0);
         let result = tri.translate(&v);
-        
+
         assert_eq!(result.a, Point3D::new(1.0, 1.0, 1.0));
         assert_eq!(result.b, Point3D::new(2.0, 1.0, 1.0));
         assert_eq!(result.c, Point3D::new(1.0, 2.0, 1.0));
@@ -231,10 +233,11 @@ mod tests {
             Point3D::new(1.0, 0.0, 0.0),
             Point3D::new(2.0, 0.0, 0.0),
             Point3D::new(1.0, 1.0, 0.0),
-        ).unwrap();
+        )
+        .unwrap();
         let center = Point3D::origin();
         let result = tri.scale(&center, 2.0);
-        
+
         assert_eq!(result.a, Point3D::new(2.0, 0.0, 0.0));
         assert_eq!(result.b, Point3D::new(4.0, 0.0, 0.0));
         assert_eq!(result.c, Point3D::new(2.0, 2.0, 0.0));

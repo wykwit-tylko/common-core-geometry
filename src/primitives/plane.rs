@@ -34,13 +34,13 @@ impl Plane {
         let v1 = Vector3D::from_points(p1, p2);
         let v2 = Vector3D::from_points(p1, p3);
         let normal = v1.cross(&v2);
-        
+
         if approx_zero(normal.magnitude_squared()) {
             return Err(GeometryError::DegenerateCase(
                 "Points are collinear, cannot define a unique plane".to_string(),
             ));
         }
-        
+
         Self::from_point_normal(p1, &normal)
     }
 

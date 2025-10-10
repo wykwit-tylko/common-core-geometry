@@ -43,13 +43,13 @@ impl LineSegment {
         let dir = self.direction();
         let to_point = Vector3D::from_points(&self.start, point);
         let length_sq = dir.magnitude_squared();
-        
+
         let t = if length_sq > 0.0 {
             to_point.dot(&dir) / length_sq
         } else {
             0.0
         };
-        
+
         let clamped_t = clamp(t, 0.0, 1.0);
         self.point_at(clamped_t)
     }
@@ -88,31 +88,22 @@ mod tests {
 
     #[test]
     fn test_length() {
-        let seg = LineSegment::new(
-            Point3D::new(0.0, 0.0, 0.0),
-            Point3D::new(3.0, 4.0, 0.0),
-        )
-        .unwrap();
+        let seg =
+            LineSegment::new(Point3D::new(0.0, 0.0, 0.0), Point3D::new(3.0, 4.0, 0.0)).unwrap();
         assert_eq!(seg.length(), 5.0);
     }
 
     #[test]
     fn test_midpoint() {
-        let seg = LineSegment::new(
-            Point3D::new(0.0, 0.0, 0.0),
-            Point3D::new(2.0, 2.0, 2.0),
-        )
-        .unwrap();
+        let seg =
+            LineSegment::new(Point3D::new(0.0, 0.0, 0.0), Point3D::new(2.0, 2.0, 2.0)).unwrap();
         assert_eq!(seg.midpoint(), Point3D::new(1.0, 1.0, 1.0));
     }
 
     #[test]
     fn test_point_at() {
-        let seg = LineSegment::new(
-            Point3D::new(0.0, 0.0, 0.0),
-            Point3D::new(10.0, 0.0, 0.0),
-        )
-        .unwrap();
+        let seg =
+            LineSegment::new(Point3D::new(0.0, 0.0, 0.0), Point3D::new(10.0, 0.0, 0.0)).unwrap();
         assert_eq!(seg.point_at(0.5), Point3D::new(5.0, 0.0, 0.0));
     }
 }
