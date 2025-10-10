@@ -1,1 +1,17 @@
+# Rust
 /target
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+.pytest_cache/
+
+# WASM
+pkg/
+pkg-*/
+*.wasm
+
+# Node
+node_modules/
